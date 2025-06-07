@@ -3,22 +3,30 @@ package main
 import (
 	"flag"
 	"fmt"
-	"math/rand"
-	"time"
+
+	"github.com/atotto/clipboard"
 )
 
 func main() {
+	// CLI flags
 	length := flag.Int("length", 12, "Length of the password")
-	useSpecial := flag.Bool("special", false, "Include special characters")
 	useUpper := flag.Bool("uppercase", false, "Include uppercase letters")
 	useNumbers := flag.Bool("numbers", false, "Include numbers")
+	useSpecial := flag.Bool("special", false, "Include special characters")
+	copyToClipboard := flag.Bool("copy", false, "Copy password to clipboard")
 
 	flag.Parse()
 
-	rand.Seed(time.Now().UnixNano())
+	password := GeneratePassword(*length, *useUpper, *useNumbers, *useSpecial)
 
-	// ✅ This function must exist in generator.go
-	password := GeneratePassword(*length, *useUpper, *useSpecial, *useNumbers)
+	fmt.Printf("🔐 Generated Password: %s\n", password)
 
-	fmt.Println("🔐 Generated Password:", password)
+	if *copyToClipboard {
+		err := clipboard.WriteAll(password)
+		if err != nil {
+			fmt.Println("❌ Failed to copy to clipboard:", err)
+		} else {
+			fmt.Println("📋 Password copied to clipboard!")
+		}
+	}
 }

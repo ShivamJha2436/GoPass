@@ -1,7 +1,10 @@
 package main
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"fmt"
+	"math/big"
+	"os"
 	"strings"
 )
 
@@ -9,10 +12,11 @@ const (
 	lowerChars   = "abcdefghijklmnopqrstuvwxyz"
 	upperChars   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	numberChars  = "0123456789"
-	specialChars = "!@#$%^&*()-_=+[]{}|;:',.<>?/"
+	specialChars = "!@#$%^&*()-_=+[]{}<>?/|"
 )
 
-func GeneratePassword(length int, useUpper, useSpecial, useNumbers bool) string {
+// GeneratePassword returns a random password of the given length using selected character sets.
+func GeneratePassword(length int, useUpper, useNumbers, useSpecial bool) string {
 	charset := lowerChars
 	if useUpper {
 		charset += upperChars
@@ -25,13 +29,15 @@ func GeneratePassword(length int, useUpper, useSpecial, useNumbers bool) string 
 	}
 
 	if len(charset) == 0 {
-		return ""
+		fmt.Println("❌ Error: No character sets selected")
+		os.Exit(1)
 	}
 
 	var password strings.Builder
 	for i := 0; i < length; i++ {
-		randomIndex := rand.Intn(len(charset))
-		password.WriteByte(charset[randomIndex])
+		index, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
+		password.WriteByte(charset[index.Int64()])
 	}
+
 	return password.String()
 }
