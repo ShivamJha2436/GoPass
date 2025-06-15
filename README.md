@@ -29,3 +29,9 @@ cd GoPass
 ```bash
 go mod tidy
 ```
+
+### 3. Run the Program
+
+```bash
+go run main.go
+```
