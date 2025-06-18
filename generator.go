@@ -31,7 +31,7 @@ func GeneratePassword(length int, useUpper, useNumbers, useSpecial bool) string 
 	if len(charset) == 0 {
 		fmt.Println("❌ Error: No character sets selected")
 		os.Exit(1)
-	}
+	}	
 
 	var password strings.Builder
 	for i := 0; i < length; i++ {
